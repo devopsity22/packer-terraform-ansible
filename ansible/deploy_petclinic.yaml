@@ -1,0 +1,12 @@
+---
+- hosts: digitalocean
+  become: true
+  tasks:
+
+  - name: Pull petclinic image and run container
+    community.docker.docker_container:
+      name: "mypetclinic"
+      image: "mdifils/petclinic"
+      ports:
+        - 8080:8080
+      pull: yes

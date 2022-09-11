@@ -1,0 +1,57 @@
+---
+- hosts: digitalocean
+  become: true
+  tasks:
+
+  - name: update repositories
+    apt:
+      update_cache: true
+      upgrade: dist
+      state: latest
+
+  - name: Install required system packages
+    apt:
+      name:
+        - apt-transport-https
+        - ca-certificates
+        - software-properties-common
+        - lsb-release
+        - curl
+        - gnupg
+        - python3-pip
+        - python3-setuptools
+      state: latest
+
+  - name: Add Docker GPG apt Key 
+    shell:
+      cmd: |
+        mkdir -p /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+      executable: /bin/bash
+
+  - name: Add Docker Repository 
+    shell:
+      cmd: |
+        echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+        https://download.docker.com/linux/ubuntu \
+        $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+      executable: /bin/bash
+
+  - name: Update apt and install docker
+    apt:
+      update_cache: true
+      name:
+        - docker-ce 
+        - docker-ce-cli
+        - containerd.io 
+        - docker-compose-plugin
+      state: latest
+
+  - name: Install Docker Module for Python
+    pip:
+      name: docker
+
+  - name: Add user to docker group
+    command: usermod -aG docker ubuntu
+      
