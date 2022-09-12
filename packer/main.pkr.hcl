@@ -13,7 +13,7 @@ source "digitalocean" "droplet_image" {
   size          = var.size
   droplet_name  = var.droplet_name
   snapshot_name = var.snapshot_name
-  ssh_username = var.ssh_username
+  ssh_username  = var.ssh_username
 }
 
 build {

@@ -9,7 +9,7 @@ variable "droplet_name" {
 }
 
 variable "region" {
-  type = string
+  type    = string
   default = "ams3"
 }
 
